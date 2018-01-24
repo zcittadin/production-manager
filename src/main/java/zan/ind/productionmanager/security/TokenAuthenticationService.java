@@ -6,15 +6,22 @@ import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import zan.ind.productionmanager.service.UserService;
 
 public class TokenAuthenticationService {
 
+	@Autowired
+	static UserService userService;
+
 	// EXPIRATION_TIME = 10 dias
+	// static final long EXPIRATION_TIME = 30000;
 	static final long EXPIRATION_TIME = 860_000_000;
 	static final String SECRET = "MySecret";
 	static final String TOKEN_PREFIX = "Bearer";
@@ -33,11 +40,17 @@ public class TokenAuthenticationService {
 
 		if (token != null) {
 			// faz parse do token
-			String user = Jwts.parser().setSigningKey(SECRET).parseClaimsJws(token.replace(TOKEN_PREFIX, "")).getBody()
-					.getSubject();
+			Claims claims = Jwts.parser().setSigningKey(SECRET).parseClaimsJws(token.replace(TOKEN_PREFIX, ""))
+					.getBody();
+			String userName = claims.getSubject();
+			Date expirationTime = claims.getExpiration();
 
-			if (user != null) {
-				return new UsernamePasswordAuthenticationToken(user, null, Collections.emptyList());
+			if (expirationTime.compareTo(new Date()) < 0) {
+				return null;
+			}
+
+			if (userName != null) {
+				return new UsernamePasswordAuthenticationToken(userName, null, Collections.emptyList());
 			}
 		}
 		return null;
