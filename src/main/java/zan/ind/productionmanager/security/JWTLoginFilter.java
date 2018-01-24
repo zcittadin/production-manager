@@ -31,8 +31,8 @@ public class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
 		AccountCredentials credentials = new ObjectMapper().readValue(request.getInputStream(),
 				AccountCredentials.class);
 
-		return getAuthenticationManager().authenticate(new UsernamePasswordAuthenticationToken(
-				credentials.getUsername(), credentials.getPassword(), Collections.emptyList()));
+		return getAuthenticationManager().authenticate(new UsernamePasswordAuthenticationToken(credentials.getEmail(),
+				credentials.getPassword(), Collections.emptyList()));
 	}
 
 	@Override
