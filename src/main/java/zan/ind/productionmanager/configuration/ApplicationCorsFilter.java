@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CorsFilter implements Filter {
+public class ApplicationCorsFilter implements Filter {
 
 	@Value("X-Auth-Token")
 	private String tokenHeader;
