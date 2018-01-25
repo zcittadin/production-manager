@@ -1,5 +1,6 @@
 package zan.ind.productionmanager.security;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.Date;
 
@@ -33,6 +34,13 @@ public class TokenAuthenticationService {
 				.signWith(SignatureAlgorithm.HS512, SECRET).compact();
 
 		response.addHeader(HEADER_STRING, TOKEN_PREFIX + " " + JWT);
+		try {
+			response.getWriter().write(JWT);
+			response.getWriter().flush();
+			response.getWriter().close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	static Authentication getAuthentication(HttpServletRequest request) {
