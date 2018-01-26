@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import zan.ind.productionmanager.model.User;
 import zan.ind.productionmanager.service.UserService;
 
 @Service
