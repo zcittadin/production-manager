@@ -1,8 +1,10 @@
 package zan.ind.productionmanager.security;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
@@ -13,9 +15,12 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import com.google.gson.Gson;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import zan.ind.productionmanager.model.User;
 import zan.ind.productionmanager.service.UserService;
 
 @Service
@@ -38,13 +43,28 @@ public class TokenAuthenticationService {
 	}
 
 	static void addAuthentication(HttpServletResponse response, String userEmail) {
-
-		String JWT = Jwts.builder().setSubject(userEmail)
-				.setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+		
+		User user = service.findUserByEmail(userEmail);
+		
+		Gson gson = new Gson();
+		
+		List<String> userRoles = new ArrayList<>();
+		user.getRoles().forEach(ur->{
+			userRoles.add(ur.getRole());
+		});
+		
+		String roles = gson.toJson(userRoles);
+		
+		Claims claims = Jwts.claims().setSubject(userEmail);
+		claims.put("userId", user.getId());
+		claims.put("role", roles);
+		
+		String JWT = Jwts.builder().setClaims(claims).setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
 				.signWith(SignatureAlgorithm.HS512, SECRET).compact();
 
 		response.addHeader(HEADER_STRING, TOKEN_PREFIX + " " + JWT);
 		try {
+			//response.getWriter().print(JWT);
 			response.getWriter().print(JWT);
 			response.getWriter().flush();
 			response.getWriter().close();
