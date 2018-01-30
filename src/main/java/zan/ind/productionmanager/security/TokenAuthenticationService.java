@@ -43,23 +43,24 @@ public class TokenAuthenticationService {
 	}
 
 	static void addAuthentication(HttpServletResponse response, String userEmail) {
-		
+
 		User user = service.findUserByEmail(userEmail);
-		
+
 		Gson gson = new Gson();
-		
+
 		List<String> userRoles = new ArrayList<>();
-		user.getRoles().forEach(ur->{
+		user.getRoles().forEach(ur -> {
 			userRoles.add(ur.getRole());
 		});
-		
+
 		String roles = gson.toJson(userRoles);
-		
+
 		Claims claims = Jwts.claims().setSubject(userEmail);
 		claims.put("userId", user.getId());
 		claims.put("role", roles);
-		
-		String JWT = Jwts.builder().setClaims(claims).setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+
+		String JWT = Jwts.builder().setClaims(claims)
+				.setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
 				.signWith(SignatureAlgorithm.HS512, SECRET).compact();
 
 		response.addHeader(HEADER_STRING, TOKEN_PREFIX + " " + JWT);
