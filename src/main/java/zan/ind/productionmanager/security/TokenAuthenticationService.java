@@ -38,7 +38,7 @@ public class TokenAuthenticationService {
 	}
 
 	static void addAuthentication(HttpServletResponse response, String userEmail) {
-
+		
 		String JWT = Jwts.builder().setSubject(userEmail)
 				.setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
 				.signWith(SignatureAlgorithm.HS512, SECRET).compact();
