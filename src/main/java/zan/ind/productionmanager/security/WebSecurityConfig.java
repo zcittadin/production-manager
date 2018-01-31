@@ -37,19 +37,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
-		httpSecurity.csrf().disable().authorizeRequests().antMatchers("/product-manager/registration").permitAll()
-				.antMatchers(HttpMethod.POST, "/login").permitAll().anyRequest().authenticated().and()
-				.addFilterBefore(new JWTLoginFilter("/login", authenticationManager()), // filtra requisições de login
+		httpSecurity.csrf().disable().authorizeRequests().antMatchers(HttpMethod.POST, "/login").permitAll()
+				.anyRequest().authenticated().and()
+				.addFilterBefore(new JWTLoginFilter("/login", authenticationManager()),
 						UsernamePasswordAuthenticationFilter.class)
-				.addFilterBefore(new JWTAuthenticationFilter(), // filtra outras requisições para verificar a presença
-																// do JWT no header
-						UsernamePasswordAuthenticationFilter.class)
-				.cors();
+				.addFilterBefore(new JWTAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class).cors();
 	}
 
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		// Busca um usuário no banco
 		auth.jdbcAuthentication().usersByUsernameQuery(usersQuery).authoritiesByUsernameQuery(rolesQuery)
 				.dataSource(dataSource).passwordEncoder(bCryptPasswordEncoder);
 	}

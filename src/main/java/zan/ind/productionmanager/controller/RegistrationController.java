@@ -20,7 +20,6 @@ public class RegistrationController {
 	@Autowired
 	UserService userService;
 
-	// Create a new User
 	@PostMapping("/registration")
 	public ResponseEntity<User> createNewUser(@Valid @RequestBody User user) {
 		User userExists = userService.findUserByEmail(user.getEmail());
