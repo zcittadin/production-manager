@@ -2,6 +2,7 @@ package zan.ind.productionmanager.service;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -22,6 +23,11 @@ public class UserServiceImpl implements UserService {
 	private RoleRepository roleRepository;
 	@Autowired
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+	@Override
+	public List<User> findAll() {
+		return userRepository.findAll();
+	}
 
 	@Override
 	public User findUserByEmail(String email) {
