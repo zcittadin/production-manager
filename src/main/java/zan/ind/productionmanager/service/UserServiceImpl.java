@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import zan.ind.productionmanager.dto.UserDTO;
 import zan.ind.productionmanager.model.Role;
 import zan.ind.productionmanager.model.User;
 import zan.ind.productionmanager.repository.RoleRepository;
@@ -28,11 +29,15 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public void saveUser(User user) {
-		user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-		//user.setActive(1);
-		//Role userRole = roleRepository.findByRole("ADMIN");
-		//user.setRoles(new HashSet<Role>(Arrays.asList(userRole)));
+	public void saveUser(UserDTO userDTO) {
+		User user = new User();
+		user.setName(userDTO.getName());
+		user.setLastName(userDTO.getLastName());
+		user.setEmail(userDTO.getEmail());
+		user.setPassword(bCryptPasswordEncoder.encode(userDTO.getPassword()));
+		user.setActive(userDTO.getActive());
+		Role userRole = roleRepository.findByRole(userDTO.getRoles());
+		user.setRoles(new HashSet<Role>(Arrays.asList(userRole)));
 		userRepository.save(user);
 	}
 

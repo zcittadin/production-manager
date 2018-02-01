@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import zan.ind.productionmanager.dto.UserDTO;
 import zan.ind.productionmanager.model.User;
 import zan.ind.productionmanager.service.UserService;
 
@@ -21,13 +22,13 @@ public class RegistrationController {
 	UserService userService;
 
 	@PostMapping("/registration")
-	public ResponseEntity<User> createNewUser(@Valid @RequestBody User user) {
-		User userExists = userService.findUserByEmail(user.getEmail());
+	public ResponseEntity<UserDTO> createNewUser(@Valid @RequestBody UserDTO userDTO) {
+		User userExists = userService.findUserByEmail(userDTO.getEmail());
 		if (userExists != null) {
 			return ResponseEntity.status(HttpStatus.IM_USED).build();
 		}
-		userService.saveUser(user);
-		return ResponseEntity.ok().body(user);
+		userService.saveUser(userDTO);
+		return ResponseEntity.ok().body(userDTO);
 	}
 
 }
