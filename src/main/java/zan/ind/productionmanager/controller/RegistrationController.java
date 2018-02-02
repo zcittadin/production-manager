@@ -5,10 +5,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.modelmapper.Condition;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.PropertyMap;
-import org.modelmapper.spi.MappingContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import ch.qos.logback.core.net.SyslogOutputStream;
 import zan.ind.productionmanager.dto.UserDTO;
 import zan.ind.productionmanager.model.User;
 import zan.ind.productionmanager.service.UserService;
